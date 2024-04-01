@@ -108,7 +108,7 @@ def traceback(score_matrix, seq1, seq2, max_coords):
             seq2_new.append("_")
             seq1_new.append(seq1[x - 1])
             x -= 1
-    return seq1_new, seq2_new
+    return seq1_new, seq2_new,y,x
 
 
 def output(seq1_new, seq2_new):
@@ -130,9 +130,9 @@ def output(seq1_new, seq2_new):
     seq2_output = "".join(seq2_new[:-1])[::-1]
     alignment_output = "".join(alignment[:-1])[::-1]
 
-    print(seq1_output)
-    print(alignment_output)
-    print(seq2_output)
+    # print(seq1_output)
+    # print(alignment_output)
+    # print(seq2_output)
     return alignment_output
 
 
@@ -163,10 +163,10 @@ def main(seq1="", seq2=""):
     score_matrix = np.zeros((ls2, ls1), dtype="int16")
     score_matrix = calculate_scorematrix(score_matrix, ls1, ls2, seq1, seq2)
     max_coords = find_max_coordinates(score_matrix)
-    seq1_new, seq2_new = traceback(score_matrix, seq1, seq2, max_coords)
+    seq1_new, seq2_new,y,x = traceback(score_matrix, seq1, seq2, max_coords)
     alignment_output = output(seq1_new, seq2_new)
     sim_tup = calc_similarity(alignment_output)
-    return sim_tup
+    return (seq1_new,seq2_new,sim_tup,max_coords,(y,x))
 
 
 if __name__ == "__main__":

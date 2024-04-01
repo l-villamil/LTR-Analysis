@@ -74,17 +74,44 @@ def getRealMatchesUnmatchesList(dict):
 
 
 def getAlignedLocal(extremes):
-    i=0
     alignedMatches = []
-    for t in extremes: 
-        seq1 = extremes[t][0]
-        seq2 =extremes[t][1]
-        sim_tup = la.main(seq1,seq2)
-        sim_tup=sim_tup[1]
-        print(sim_tup)
-        alignedMatches.append(sim_tup)
-        i+=1
-        if (i>1001):
-            break
-        print(i)
-    return alignedMatches
+    ltrSize=[]
+    coords=[]
+    i=1
+    results="results.txt"
+    try:
+
+        with open(results,'w') as archivo:
+            
+
+            for t in extremes: 
+                seq1 = extremes[t][0]
+                seq2 =extremes[t][1]
+                localResult=la.main(seq1,seq2)
+                origin_coords=localResult[4]
+                max_coords=localResult[3]
+                sim_tup = localResult[2]
+                seq2_new=localResult[1]
+                seq1_new=localResult[0]
+                sim_tup=sim_tup[1]
+                # print(max_coords,origin_coords,sim_tup)
+
+                coords.append([max_coords,origin_coords])
+                alignedMatches.append(sim_tup)
+                ltrSize.append(len(seq1_new))
+                archivo.write(''.join(seq1_new)+ '\n')
+                archivo.write(''.join(seq2_new)+ '\n')
+                archivo.write(str(sim_tup)+ '\n')
+                archivo.write(str(max_coords)+ '\n')
+                archivo.write(str(origin_coords)+ '\n')
+
+
+
+                # if(i>10):
+                #    break
+                
+                print(i)
+                i+=1
+    except Exception as e:
+        print("Error al escribir el archivo:", str(e))
+    return alignedMatches,ltrSize,coords
